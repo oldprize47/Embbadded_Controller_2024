@@ -2,7 +2,7 @@
 @ Embedded Controller by Young-Keun Kim - Handong Global University
 Author           : SangheonPark
 Created          : 2024-09-10
-Modified         : 2024-09-10
+Modified         : 2024-09-22 
 Language/ver     : C++ in Keil uVision
 
 Description      : Distributed to Students for LAB_GPIO
@@ -41,6 +41,10 @@ Description      : Distributed to Students for LAB_GPIO
 #define HIGH 1
 #define LOW  0
 
+#define LED_PIN_1 PA7
+#define LED_PIN_2 PB6
+#define LED_PIN_3 PC7
+#define LED_PIN_4 PA9
 //#define LED_PIN PA_5   //Find LED Port&Pin and Fill the blank	
 //#define BUTTON_PIN PC_13//Find BTN Port&Pin and Fill the blank
 
@@ -55,9 +59,10 @@ void GPIO_mode(PinName_t pinName, uint32_t mode);
 void GPIO_ospeed(PinName_t pinName, int speed);
 void GPIO_otype(PinName_t pinName, int type);
 void GPIO_pupd(PinName_t pinName, int pupd);
+void sevensegment_display_init(PinName_t pinNameA, PinName_t pinNameB, PinName_t pinNameC, PinName_t pinNameD);
+void sevensegment_display(uint8_t  num);
 
 
- 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
