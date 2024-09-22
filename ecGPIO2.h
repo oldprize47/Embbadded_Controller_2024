@@ -61,6 +61,8 @@ void GPIO_otype(PinName_t pinName, int type);
 void GPIO_pupd(PinName_t pinName, int pupd);
 void sevensegment_display_init(PinName_t pinNameA, PinName_t pinNameB, PinName_t pinNameC, PinName_t pinNameD);
 void sevensegment_display(uint8_t  num);
+void sevensegment_decoder_init(PinName_t pin_a, PinName_t pin_b, PinName_t pin_c, PinName_t pin_d, PinName_t pin_e, PinName_t pin_f, PinName_t pin_g, PinName_t pin_dp);
+void sevensegment_decoder(uint8_t  num);
 
 
 #ifdef __cplusplus

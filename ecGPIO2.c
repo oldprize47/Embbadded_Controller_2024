@@ -14,7 +14,8 @@ Description      : Distributed to Students for LAB_GPIO
 #include "stm32f411xe.h"
 #include "ecGPIO2.h"
 
-PinName_t LED_PIN_decoder[4] = {0};	// Seven segment LED Pin Array
+PinName_t LED_PIN_display[4] = {0};	// Seven segment LED Pin Array
+PinName_t LED_PIN_decoder[8] = {0};	// Seven segment decoder LED Pin Array
 
 void GPIO_init(PinName_t pinName, uint32_t mode){     
 	GPIO_TypeDef * Port;
@@ -107,15 +108,15 @@ void GPIO_pupd(PinName_t pinName, int pupd){
 
 void sevensegment_display_init(PinName_t pinNameA, PinName_t pinNameB, PinName_t pinNameC, PinName_t pinNameD){
 	
-	LED_PIN_decoder[0] = pinNameA;
-	LED_PIN_decoder[1] = pinNameB;
-	LED_PIN_decoder[2] = pinNameC;
-	LED_PIN_decoder[3] = pinNameD;
+	LED_PIN_display[0] = pinNameA;
+	LED_PIN_display[1] = pinNameB;
+	LED_PIN_display[2] = pinNameC;
+	LED_PIN_display[3] = pinNameD;
 	for(int i = 0; i < 4; i++){
-		GPIO_init(LED_PIN_decoder[i], OUTPUT);
-		GPIO_otype(LED_PIN_decoder[i],PUSHPULL);
-		GPIO_pupd(LED_PIN_decoder[i],NOPUPD);
-		GPIO_ospeed(LED_PIN_decoder[i], MEDIUM_SPEED);
+		GPIO_init(LED_PIN_display[i], OUTPUT);
+		GPIO_otype(LED_PIN_display[i],PUSHPULL);
+		GPIO_pupd(LED_PIN_display[i],NOPUPD);
+		GPIO_ospeed(LED_PIN_display[i], MEDIUM_SPEED);
 	}
 }
 
@@ -123,7 +124,43 @@ void sevensegment_display(uint8_t  num){
 	
 	// Decimal to Binary conversion
 	for(int i = 3; i >= 0; i--){						
-		GPIO_write(LED_PIN_decoder[i], num%2);	// Put the remainder in from the end to the first
+		GPIO_write(LED_PIN_display[i], num%2);	// Put the remainder in from the end to the first
 		num /= 2;																
+	}
+}
+
+void sevensegment_decoder_init(PinName_t pin_a, PinName_t pin_b, PinName_t pin_c, PinName_t pin_d, PinName_t pin_e, PinName_t pin_f, PinName_t pin_g, PinName_t pin_dp){
+	LED_PIN_decoder[0] = pin_a;
+	LED_PIN_decoder[1] = pin_b;
+	LED_PIN_decoder[2] = pin_c;
+	LED_PIN_decoder[3] = pin_d;
+	LED_PIN_decoder[4] = pin_e;
+	LED_PIN_decoder[5] = pin_f;
+	LED_PIN_decoder[6] = pin_g;
+	LED_PIN_decoder[7] = pin_dp;
+	
+	for(int i = 0; i < 8; i++){
+		GPIO_init(LED_PIN_decoder[i], OUTPUT);
+		GPIO_otype(LED_PIN_decoder[i],PUSHPULL);
+		GPIO_pupd(LED_PIN_decoder[i],NOPUPD);
+		GPIO_ospeed(LED_PIN_decoder[i], MEDIUM_SPEED);
+	}
+}
+void sevensegment_decoder(uint8_t  num){
+	int decoder_number[10][8]={
+		{0,0,0,0,0,0,1,1},          //zero
+		{1,0,0,1,1,1,1,1},          //one
+		{0,0,1,0,0,1,0,1},          //two
+		{0,0,0,0,1,1,0,1},          //three
+		{1,0,0,1,1,0,0,1},          //four
+		{0,1,0,0,1,0,0,1},          //five
+		{1,1,0,0,0,0,0,1},          //six
+		{0,0,0,1,1,0,1,1},          //seven
+		{0,0,0,0,0,0,0,1},          //eight
+		{0,0,0,1,1,0,0,1},          //nine
+	};
+	
+	for(int i = 0; i < 8; i++){
+		GPIO_write(LED_PIN_decoder[i], decoder_number[num][i]);
 	}
 }
