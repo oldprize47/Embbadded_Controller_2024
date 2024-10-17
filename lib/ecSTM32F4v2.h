@@ -24,6 +24,8 @@
 #include "ecSysTick2.h"
 #include "ecTIM2.h"
 #include "ecPWM2.h"
+#include "ecICAP2.h"
+#include "ecUART2_simple.h"
 //#include "ecStepper2.h"
 //#include "ecADC2.h"
 //#include "ecUART2.h"

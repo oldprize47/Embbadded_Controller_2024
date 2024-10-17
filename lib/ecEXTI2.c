@@ -17,8 +17,8 @@ void EXTI_init(PinName_t pinName, int trig_type,int priority){
 	unsigned int pin;
 	ecPinmap(pinName,&Port,&pin);
 	// SYSCFG peripheral clock enable	
-	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;	
-//	RCC->APB2ENR |= 1 << 14;	
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+	//	RCC->APB2ENR |= 1 << 14;
 	
 	// Connect External Line to the GPIO
 	int EXTICR_port;
@@ -30,7 +30,7 @@ void EXTI_init(PinName_t pinName, int trig_type,int priority){
 	else 										EXTICR_port = 7;
 	
 	SYSCFG->EXTICR[pin/4] &= ~(0b1111 << 4*(pin%4));			// clear 4 bits
-	SYSCFG->EXTICR[pin/4] |= (EXTICR_port << 4*(pin%4));			// set 4 bits
+	SYSCFG->EXTICR[pin/4] |= (EXTICR_port << 4*(pin%4));		// set 4 bits
 	
 	
 	// Configure Trigger edge

@@ -122,6 +122,14 @@ void sevensegment_display(uint8_t  num){
 	}
 }
 
+void sevensegment_Off(){
+	
+	// Decimal to Binary conversion
+	for(int i = 3; i >= 0; i--){						
+		GPIO_write(LED_PIN_display[i], 1);	// Put the remainder in from the end to the first															
+	}
+}
+
 void sevensegment_decoder_init(PinName_t pin_a, PinName_t pin_b, PinName_t pin_c, PinName_t pin_d, PinName_t pin_e, PinName_t pin_f, PinName_t pin_g, PinName_t pin_dp){
 	LED_PIN_decoder[0] = pin_a;
 	LED_PIN_decoder[1] = pin_b;

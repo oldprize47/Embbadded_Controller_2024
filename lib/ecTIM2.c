@@ -1,9 +1,9 @@
 /**
 ******************************************************************************
-* @author  SSSLAB
-* @Mod	   2021-8-12 by YKKIM  	
-* @brief   Embedded Controller:  EC_HAL_for_student_exercise 
-* 
+* @author  SangheonPark
+* @Mod	   2024-10-06 by PSH
+* @brief   Embedded Controller:  EC_HAL
+*
 ******************************************************************************
 */
 
@@ -42,10 +42,11 @@ void TIM_init(TIM_TypeDef* TIMx){
 // Timer Update Event Period  1~6000 usec  with 1MHz Couter / ARR=1* usec
 void TIM_period_us(TIM_TypeDef *TIMx, uint32_t usec){   
 	//	Q. Which combination of PSC and ARR for msec unit?
+	// PSC = 840 - 1, ARR = 100 - 1; PSC = 84 - 1, ARR = 1000 - 1; => (PSC+1)(ARR+1) = 84000
     // 	Q. What are the possible range (in sec ?)
-
 	// 0.01ms(100kHz, ARR = 1) to 655 msec (ARR = 0xFFFF)
 	// 0.01ms(100kHz, ARR = 1) to 40,000,000 msec (ARR = 0xFFFF FFFF)
+	
 
 	// 1us(1MHz, ARR=1) to 65msec (ARR=0xFFFF)
 	uint16_t PSCval;
@@ -82,11 +83,11 @@ void TIM_period_us(TIM_TypeDef *TIMx, uint32_t usec){
 void TIM_period_ms(TIM_TypeDef* TIMx, uint32_t msec){ 
 	
 	//	Q. Which combination of PSC and ARR for msec unit?
+	// // PSC = 840 - 1, ARR = 100 - 1; PSC = 84 - 1, ARR = 1000 - 1; => (PSC+1)(ARR+1) = 84000
+	// 
 	// 	Q. What are the possible range (in msec ?)
-
     // 0.02ms(50kHz, ARR=1) to 1.3sec (ARR=0xFFFF)
 	//uint32_t prescaler = 1680;
-
 	// 0.1ms(10kHz, ARR = 1) to 6.5sec (ARR = 0xFFFF)
 	
 	uint16_t PSCval;
@@ -100,7 +101,7 @@ void TIM_period_ms(TIM_TypeDef* TIMx, uint32_t msec){
 	
 	
 	if (TIMx == TIM2 || TIMx == TIM5){
-		uint32_t ARRval;	
+		uint32_t ARRval;
 		PSCval = Sys_CLK/100000;		// 840 or 160	--> PSC_clk=f_cnt = 100kHz
 		ARRval = 100*msec;		// 100kHz*msec,  ARRval=100 for 1msec
 		TIMx->PSC = PSCval-1;

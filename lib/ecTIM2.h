@@ -1,9 +1,9 @@
 /**
 ******************************************************************************
-* @author  SSSLAB
-* @Mod	   2021-8-12 by YKKIM  	
-* @brief   Embedded Controller:  EC_HAL_for_student_exercise 
-* 
+* @author  SangheonPark
+* @Mod	   2024-10-06 by PSH
+* @brief   Embedded Controller:  EC_HAL
+*
 ******************************************************************************
 */
 
