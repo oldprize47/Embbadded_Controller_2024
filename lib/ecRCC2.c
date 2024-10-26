@@ -26,7 +26,7 @@ void RCC_HSI_init() {
   RCC->CFGR |= (uint32_t)RCC_CFGR_SW_HSI; 								//00: HSI16 oscillator used as system clock
 
 	// Wait till HSI is used as system clock source
-  while ((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != 0 );
+  while((RCC->CFGR & (uint32_t)RCC_CFGR_SWS) != 0 ){;}
 		   
 	//EC_SYSTEM_CLK=16000000;
 		//EC_SYSCLK=16000000;
