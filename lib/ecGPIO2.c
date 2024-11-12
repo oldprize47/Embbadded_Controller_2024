@@ -166,7 +166,7 @@ void sevensegment_decoder(uint8_t  num){
 	}
 }
 
-void PA_5_LED_toggle(){
+void LED_toggle(){
 	GPIO_TypeDef * Port;
 	unsigned int pin;
 	ecPinmap(PA_5,&Port,&pin);

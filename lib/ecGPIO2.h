@@ -14,6 +14,7 @@ Description      : Distributed to Students for LAB_GPIO
 
 #include "ecSTM32F4v2.h"
 
+#define LED_PIN PA_5
 // MODER
 #define INPUT  0x00
 #define OUTPUT 0x01

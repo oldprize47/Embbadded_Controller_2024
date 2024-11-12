@@ -141,7 +141,7 @@ void USART_setting(USART_TypeDef* USARTx, PinName_t pin_GPIO_TX, PinName_t pin_G
 	USARTx->CR1 &= ~USART_CR1_M;       		// M: 0 = 8 data bits, 1 start bit    
 	USARTx->CR1 &= ~USART_CR1_OVER8;  		// 0 = oversampling by 16 (to reduce RF noise)	 
 	// Configure Stop bit
-	USARTx->CR2 &= ~USART_CR2_STOP;  		// 1 stop bit																 
+	USARTx->CR2 &= ~USART_CR2_STOP;  		// 00: 1 stop bit																 
 
 	// CSet Baudrate to 9600 using APB frequency (42MHz)
 	// If oversampling by 16, Tx/Rx baud = f_CK / (16*USARTDIV),  
