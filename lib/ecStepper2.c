@@ -17,8 +17,8 @@ uint32_t step_delay = 100;
 uint32_t step_per_rev = 64 * 32;
 
 // Stepper Motor variable
-volatile Stepper_t myStepper;
-PinName_t Stepper_pins[4] = {0};
+volatile Stepper_t myStepper1;
+volatile Stepper_t myStepper2;
 
 // FULL stepping sequence  - FSM
 typedef struct
@@ -57,70 +57,129 @@ State_half_t FSM_half[8] = {
 	{{S0, S6}, 0b1001},
 };
 
-void Stepper_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4)
+void Stepper1_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4)
 {
 
 	//  GPIO Digital Out Initiation
-	myStepper.pin1 = pinName1;
-	myStepper.pin2 = pinName2;
-	myStepper.pin3 = pinName3;
-	myStepper.pin4 = pinName4;
-
-	Stepper_pins[0] = myStepper.pin1;
-	Stepper_pins[1] = myStepper.pin2;
-	Stepper_pins[2] = myStepper.pin3;
-	Stepper_pins[3] = myStepper.pin4;
+	myStepper1.pin[0] = pinName1;
+	myStepper1.pin[1] = pinName2;
+	myStepper1.pin[2] = pinName3;
+	myStepper1.pin[3] = pinName4;
 	//  GPIO Digital Out Initiation
 	// No pull-up Pull-down , Push-Pull, Fast
 	for (int i = 0; i < 4; i++)
 	{
-		GPIO_init(Stepper_pins[i], OUTPUT);
-		GPIO_pupd(Stepper_pins[i], NOPUPD);
-		GPIO_otype(Stepper_pins[i], PUSHPULL);
-		GPIO_ospeed(Stepper_pins[i], FAST_SPEED);
+		GPIO_init(myStepper1.pin[i], OUTPUT);
+		GPIO_pupd(myStepper1.pin[i], NOPUPD);
+		GPIO_otype(myStepper1.pin[i], PUSHPULL);
+		GPIO_ospeed(myStepper1.pin[i], FAST_SPEED);
 	}
 }
 
-void Stepper_pinOut(uint32_t state, uint32_t mode)
+void Stepper1_pinOut(uint32_t state, uint32_t mode)
 {
 	if (mode == FULL)
 	{ // FULL mode
 		for (int i = 3; i >= 0; i--)
-			GPIO_write(Stepper_pins[3 - i], (FSM_full[state].out >> i) & 1);
+			GPIO_write(myStepper1.pin[3 - i], (FSM_full[state].out >> i) & 1);
 	}
 	else if (mode == HALF)
 	{ // HALF mode
 		for (int i = 3; i >= 0; i--)
-			GPIO_write(Stepper_pins[3 - i], (FSM_full[state].out >> i) & 1);
+			GPIO_write(myStepper1.pin[3 - i], (FSM_full[state].out >> i) & 1);
 	}
 }
 
-void Stepper_setSpeed(long whatSpeed)					// rpm [rev/min]
+void Stepper1_setSpeed(long whatSpeed)					// rpm [rev/min]
 {													   
 	step_delay = 60.0 * 1000.0 / whatSpeed / step_per_rev; 	// Convert rpm to  [msec/step] delayW
 }
 
-void Stepper_step(uint32_t steps, uint32_t direction, uint32_t mode)
+void Stepper1_step(uint32_t steps, uint32_t direction, uint32_t mode)
 {
 	uint32_t state = 0;
-	myStepper._step_num = steps;
+	myStepper1._step_num = steps;
 
-	for (; myStepper._step_num > 0; myStepper._step_num--)
+	for (; myStepper1._step_num > 0; myStepper1._step_num--)
 	{						  // run for step size
 		delay_ms(step_delay); // delay (step_delay);
 		if (mode == FULL)
 			state = FSM_full[state].next[direction]; // state = next state
 		else if (mode == HALF)
 			state = FSM_half[state].next[direction]; // state = next state
-		Stepper_pinOut(state, mode);
+		Stepper1_pinOut(state, mode);
 	}
 }
 
-void Stepper_stop(void)
+void Stepper1_stop(void)
 {
-	myStepper._step_num = 0;
+	myStepper1._step_num = 0;
 	// All pins(A,AN,B,BN) set as DigitalOut '0'
 	for (int i = 0; i < 4; i++)
-		GPIO_write(Stepper_pins[i], 0);
-	Stepper_setSpeed(0);
+		GPIO_write(myStepper1.pin[i], 0);
+	Stepper1_setSpeed(0);
+}
+
+void Stepper2_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4)
+{
+
+	//  GPIO Digital Out Initiation
+	myStepper2.pin[0] = pinName1;
+	myStepper2.pin[1] = pinName2;
+	myStepper2.pin[2] = pinName3;
+	myStepper2.pin[3] = pinName4;
+
+	//  GPIO Digital Out Initiation
+	// No pull-up Pull-down , Push-Pull, Fast
+	for (int i = 0; i < 4; i++)
+	{
+		GPIO_init(myStepper2.pin[i], OUTPUT);
+		GPIO_pupd(myStepper2.pin[i], NOPUPD);
+		GPIO_otype(myStepper2.pin[i], PUSHPULL);
+		GPIO_ospeed(myStepper2.pin[i], FAST_SPEED);
+	}
+}
+
+void Stepper2_pinOut(uint32_t state, uint32_t mode)
+{
+	if (mode == FULL)
+	{ // FULL mode
+		for (int i = 3; i >= 0; i--)
+			GPIO_write(myStepper2.pin[3 - i], (FSM_full[state].out >> i) & 1);
+	}
+	else if (mode == HALF)
+	{ // HALF mode
+		for (int i = 3; i >= 0; i--)
+			GPIO_write(myStepper2.pin[3 - i], (FSM_full[state].out >> i) & 1);
+	}
+}
+
+void Stepper2_setSpeed(long whatSpeed)					// rpm [rev/min]
+{													   
+	step_delay = 60.0 * 1000.0 / whatSpeed / step_per_rev; 	// Convert rpm to  [msec/step] delayW
+}
+
+void Stepper2_step(uint32_t steps, uint32_t direction, uint32_t mode)
+{
+	uint32_t state = 0;
+	myStepper2._step_num = steps;
+
+	for (; myStepper2._step_num > 0; myStepper2._step_num--)
+	{						  // run for step size
+		delay_ms(step_delay); // delay (step_delay);
+		if (mode == FULL)
+			state = FSM_full[state].next[direction]; // state = next state
+		else if (mode == HALF)
+			state = FSM_half[state].next[direction]; // state = next state
+		Stepper2_pinOut(state, mode);
+	}
+}
+
+void Stepper2_stop(void)
+{
+	myStepper2._step_num = 0;
+	// All pins(A,AN,B,BN) set as DigitalOut '0'
+	for (int i = 0; i < 4; i++)
+		GPIO_write(myStepper2.pin[i], 0);
+	Stepper2_setSpeed(0);
 }

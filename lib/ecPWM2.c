@@ -27,7 +27,8 @@ void PWM_init(PinName_t pinName){
 	
 // 1. Initialize GPIO port and pin as AF	
 	GPIO_init(pinName, AF);  // AF=2
-	GPIO_ospeed(pinName, FAST_SPEED);   // GPIOA 1 FAST SPEED
+	// GPIO_ospeed(pinName, FAST_SPEED);   // GPIOA 1 FAST SPEED
+	GPIO_ospeed(pinName, HIGH_SPEED);   // GPIOA 1 FAST SPEED
 	GPIO_otype(pinName, PUSHPULL);
 	GPIO_pupd(pinName,NOPUPD);
 	

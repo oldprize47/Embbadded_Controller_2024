@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include "stm32f411xe.h"
-#include "ecSTM32F4v2.h"
+#include "ecGPIO2.h"
+#include "ecRCC2.h"
 
 #define POL 0
 #define INT 1
@@ -39,18 +40,23 @@
 // Configuration UART 1, 2 using default pins 
 void UART1_init(void);
 void UART2_init(void);	
+void UART6_init(void);
 void UART1_baud(uint32_t baud);
 void UART2_baud(uint32_t baud);
+void UART6_baud(uint32_t baud);
 
 // USART write & read
 void USART1_write(uint8_t* buffer, uint32_t nBytes);
 void USART2_write(uint8_t* buffer, uint32_t nBytes);
+void USART6_write(uint8_t* buffer, uint32_t nBytes);
 uint8_t USART1_read(void);										
-uint8_t USART2_read(void);	
+uint8_t USART2_read(void);
+uint8_t USART6_read(void);
 
 // RX Inturrupt Flag USART1,2
 uint32_t is_USART1_RXNE(void);
 uint32_t is_USART2_RXNE(void);
+uint32_t is_USART6_RXNE(void);
 
 // private functions
 void USART_write(USART_TypeDef* USARTx, uint8_t* buffer, uint32_t nBytes);

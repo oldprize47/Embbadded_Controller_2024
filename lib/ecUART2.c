@@ -1,6 +1,6 @@
 #include "ecUART2.h"
 #include <math.h>
-
+#include "ecSTM32F4v2.h"
 // ********************** DO NOT MODIFY HERE ***************************
 // 
 
@@ -96,12 +96,12 @@ void USART_setting(USART_TypeDef* USARTx, PinName_t pin_GPIO_TX, PinName_t pin_G
 	GPIO_init(pin_GPIO_TX, AF);
 	GPIO_otype(pin_GPIO_TX, PUSHPULL);
 	GPIO_pupd(pin_GPIO_TX, NOPUPD);
-	GPIO_ospeed(pin_GPIO_TX, HIGH_SPEED);
+	GPIO_ospeed(pin_GPIO_TX, HIGH);
 	
 	GPIO_init(pin_GPIO_RX, AF);
 	GPIO_otype(pin_GPIO_RX, PUSHPULL);
 	GPIO_pupd(pin_GPIO_RX, NOPUPD);
-	GPIO_ospeed(pin_GPIO_RX, HIGH_SPEED);
+	GPIO_ospeed(pin_GPIO_RX, HIGH);
 	
 	// Set Alternative Function Register for USARTx.	
 	// AF7 - USART1,2 
@@ -138,10 +138,10 @@ void USART_setting(USART_TypeDef* USARTx, PinName_t pin_GPIO_TX, PinName_t pin_G
 	 
 	// No Parity / 8-bit word length / Oversampling x16 
 	USARTx->CR1 &= ~USART_CR1_PCE;   		// No parrity bit
-	USARTx->CR1 &= ~USART_CR1_M;       		// M: 0 = 8 data bits, 1 start bit    
-	USARTx->CR1 &= ~USART_CR1_OVER8;  		// 0 = oversampling by 16 (to reduce RF noise)	 
+	USARTx->CR1 &= ~USART_CR1_M;       	// M: 0 = 8 data bits, 1 start bit    
+	USARTx->CR1 &= ~USART_CR1_OVER8;  	// 0 = oversampling by 16 (to reduce RF noise)	 
 	// Configure Stop bit
-	USARTx->CR2 &= ~USART_CR2_STOP;  		// 00: 1 stop bit																 
+	USARTx->CR2 &= ~USART_CR2_STOP;  		// 1 stop bit																 
 
 	// CSet Baudrate to 9600 using APB frequency (42MHz)
 	// If oversampling by 16, Tx/Rx baud = f_CK / (16*USARTDIV),  
@@ -184,10 +184,10 @@ void UART_baud(USART_TypeDef* USARTx, uint32_t baud){
 	if(USARTx == USART2) fCK =fCK/2;      // APB1
 
 // Method 1
-	float USARTDIV = (float) fCK/(16.0 * baud);
+	float USARTDIV = (float) fCK/(16*baud);
 	uint32_t mantissa = (uint32_t)USARTDIV;
-	uint32_t fraction = round((USARTDIV - mantissa)*16);
-	USARTx->BRR |= ((mantissa << 4) | fraction);
+	uint32_t fraction = round((USARTDIV-mantissa)*16);
+	USARTx->BRR |= (mantissa<<4)|fraction;
 	
 	// Enable TX, RX, and USARTx 
 	USARTx->CR1 |= USART_CR1_UE;
@@ -218,11 +218,24 @@ void UART2_init(void){
 	USART_setting(USART2, PA_2, PA_3, 9600);
 }
 
+void UART6_init(void){
+	// ********************** USART 1 ***************************
+	// PA_11 = USART6_TX (default)	// PC_6  (option)
+	// PA_12 = USART6_RX (default)	// PC_7 (option)
+	// APB2
+	// **********************************************************
+	USART_setting(USART6, PA_11, PA_12, 9600);
+}
+
 void UART1_baud(uint32_t baud){
 	UART_baud(USART1, baud);
 }
 void UART2_baud(uint32_t baud){
 	UART_baud(USART2, baud);
+}
+
+void UART6_baud(uint32_t baud){
+	UART_baud(USART6, baud);
 }
 
 void USART1_write(uint8_t* buffer, uint32_t nBytes){
@@ -232,6 +245,11 @@ void USART1_write(uint8_t* buffer, uint32_t nBytes){
 void USART2_write(uint8_t* buffer, uint32_t nBytes){
 	USART_write(USART2, buffer, nBytes);
 }
+
+void USART6_write(uint8_t* buffer, uint32_t nBytes){
+	USART_write(USART6, buffer, nBytes);
+}
+
 uint8_t USART1_read(void){
 	return USART_read(USART1);
 }	
@@ -240,9 +258,18 @@ uint8_t USART2_read(void){
 	return USART_read(USART2);
 }
 
+uint8_t USART6_read(void){
+	return USART_read(USART6);
+}
+
 uint32_t is_USART1_RXNE(void){
 	return is_USART_RXNE(USART1);
 }
+
 uint32_t is_USART2_RXNE(void){
 	return is_USART_RXNE(USART2);
+}
+
+uint32_t is_USART6_RXNE(void){
+	return is_USART_RXNE(USART6);
 }

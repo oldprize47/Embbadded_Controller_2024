@@ -16,19 +16,19 @@
 //stepper motor function
 
 typedef struct{
-	PinName_t pin1;
-	PinName_t pin2;
-	PinName_t pin3;
-	PinName_t pin4;
+	PinName_t pin[4];
 	uint32_t _step_num;
 } Stepper_t;
 
 	 
-void Stepper_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4);
-void Stepper_setSpeed(long whatSpeed);
-void Stepper_step(uint32_t steps, uint32_t direction, uint32_t mode); 
-void Stepper_stop(void);
-
+void Stepper1_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4);
+void Stepper1_setSpeed(long whatSpeed);
+void Stepper1_step(uint32_t steps, uint32_t direction, uint32_t mode); 
+void Stepper1_stop(void);
+void Stepper2_init(PinName_t pinName1, PinName_t pinName2, PinName_t pinName3, PinName_t pinName4);
+void Stepper2_setSpeed(long whatSpeed);
+void Stepper2_step(uint32_t steps, uint32_t direction, uint32_t mode); 
+void Stepper2_stop(void);
 
 
 #ifdef __cplusplus
